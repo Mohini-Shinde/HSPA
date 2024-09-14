@@ -11,24 +11,25 @@ export class Property implements IPropertyBase {
     FType: string;
     Price: number;
     BuiltArea: number;
-    carpetArea?: number;
-    address: string;
-    address2?: string;
+    CarpetArea?: number;
+    Address: string;
+    Address2?: string;
     CityId: number;
     City: string;
-    floorNo?: string;
-    totalFloors?: string;
+    FloorNo?: string;
+    TotalFloor?: string;
     //readyToMove: boolean;
     RTM: number;
-    age?: string;
-    mainEntrance?: string;
-    security?: number;
-    gated?: boolean;
-    maintenance?: number;
+    AOP?: string;
+    MainEntrance?: string;
+    Security?: number;
+    Gated?: boolean;
+    Maintenance?: number;
     //estPossessionOn?: string;
     Posession?: string;
-    photo?: string;
-    description?: string;
+    Photo?: string;
+    Description?: string;
     PostedOn:string
+    Image:string
     //photos?: Photo[];
 }

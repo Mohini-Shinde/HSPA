@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
 import {map} from 'rxjs/operators'
 import { Observable } from 'rxjs';
-import { IProperty } from '../models/Iproperty';
 import { Property } from '../models/property';
 
 @Injectable({
@@ -11,14 +10,27 @@ import { Property } from '../models/property';
 export class HousingService {
 
   constructor(private http:HttpClient) { }
-  getAllProperties(SellRent:number) : Observable<IProperty[]>{
+  getProperty(id:number){
+    return this.getAllProperties().pipe(
+      map(propertiesArray => {
+        return propertiesArray.find(p=> p.Id===id);
+      })
+    );
+  }
+
+  getAllProperties(SellRent?:number) : Observable<Property[]>{
    return this.http.get('data/properties.json').pipe(
     map(data => {      
-      const propertiesArray : Array<IProperty> = [];
+      const propertiesArray : Array<Property> = [];
       const localProperties = JSON.parse(localStorage.getItem('newProp')!);
       if(localProperties){
         for(const id in localProperties){
-          if(localProperties.hasOwnProperty(id) && localProperties[id].SellRent===SellRent){
+          if(SellRent){
+            if(localProperties.hasOwnProperty(id) && localProperties[id].SellRent===SellRent){
+              propertiesArray.push(localProperties[id]);
+            }
+          }
+          else{
             propertiesArray.push(localProperties[id]);
           }
         }
@@ -26,9 +38,14 @@ export class HousingService {
       if (Array.isArray(data)) {
 
         data.forEach(function (item) {
-          console.log(item.SellRent);
-          if(item.SellRent===SellRent)
+          if(SellRent){
+            //console.log(item.SellRent);
+            if(item.SellRent===SellRent)
+              propertiesArray.push(item);
+          }
+          else{
             propertiesArray.push(item);
+          }          
         });
     }
    // Not working below code from angular 9 in angular 16
@@ -41,10 +58,11 @@ export class HousingService {
         }
       }     */
       return propertiesArray;
-    }    
-    )
-   )
+    })
+   );
+   return this.http.get<Property[]>('data/properties.json');
   }
+  
   addProperty(property: Property){
     let newProp = [property];
     // Add new property in array if newProp already exists in local storage
