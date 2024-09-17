@@ -15,10 +15,7 @@ export class FilterPipe implements PipeTransform {
         resultArray.push(item);
       }
     }
-    console.log(value);
-    console.log(filterString);
-    console.log(propName);
-    console.log(resultArray);
+    
     return resultArray;
   }
 
