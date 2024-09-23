@@ -37,13 +37,17 @@ propertyView : IPropertyBase={
   RTM:this.initVar,
   //Posession:''
 };
-
+cityList : any[];
   constructor(private fb:FormBuilder, private router:Router,
     private housingService: HousingService, private alertify:AlertifyService
   ) { }
 
   ngOnInit() {
     this.CreateAddPropertyForm();
+    this.housingService.getAllCities().subscribe(data =>{
+      console.log(data);
+      this.cityList=data;
+    })
   }
   CreateAddPropertyForm(){
     this.addPropertyForm = this.fb.group({
@@ -187,20 +191,20 @@ propertyView : IPropertyBase={
 
   // #endregion
   // #endregion
-  selectTab(nextTabId: number, IsCurrentTabValid: boolean) {  
+  selectTab(nextTabId: number, IsCurrentTabValid: boolean) {
     console.log(IsCurrentTabValid);
     console.log(this.BasicInfo.value);
     this.nextClicked=true;
     if(IsCurrentTabValid){
       if (this.formTabs?.tabs[nextTabId]) {
-        this.formTabs.tabs[nextTabId].active = true;        
+        this.formTabs.tabs[nextTabId].active = true;
       }
-    }    
+    }
   }
   onBack(){
     this.router.navigate(['/']);
   }
-  
+
   onSubmit(){
     this.nextClicked=true;
     if(this.allTabsValid()){
@@ -217,7 +221,7 @@ propertyView : IPropertyBase={
     }
     else{
         this.alertify.error('Review');
-    }    
+    }
   }
   mapProperty(): void{
     this.property.Id=this.housingService.newPropId();

@@ -18,9 +18,14 @@ export class HousingService {
     );
   }
 
+  getAllCities(): Observable<any[]>{
+    //private url = "http://api.angularapp.site/api/v1";
+    return this.http.get<any[]>('http://localhost:5222/api/city');
+  }
+
   getAllProperties(SellRent?:number) : Observable<Property[]>{
    return this.http.get('data/properties.json').pipe(
-    map(data => {      
+    map(data => {
       const propertiesArray : Array<Property> = [];
       const localProperties = JSON.parse(localStorage.getItem('newProp')!);
       if(localProperties){
@@ -45,7 +50,7 @@ export class HousingService {
           }
           else{
             propertiesArray.push(item);
-          }          
+          }
         });
     }
    // Not working below code from angular 9 in angular 16
@@ -62,7 +67,7 @@ export class HousingService {
    );
    return this.http.get<Property[]>('data/properties.json');
   }
-  
+
   addProperty(property: Property){
     let newProp = [property];
     // Add new property in array if newProp already exists in local storage
@@ -81,6 +86,6 @@ export class HousingService {
     else{
       localStorage.setItem('PID','101');
       return 101;
-    }   
+    }
   }
 }
