@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebAPI.Data;
 using WebAPI.Models;
+using WebAPI.Repository.Interfaces;
 
-namespace WebAPI.Data.Repo
+namespace WebAPI.Repository.Repositories
 {
     public class CityRepository : ICityRepository
     {
@@ -9,7 +11,7 @@ namespace WebAPI.Data.Repo
 
         public CityRepository(DataContext db)
         {
-            this._db = db;
+            _db = db;
         }
         public void AddCity(City city)
         {
@@ -22,14 +24,16 @@ namespace WebAPI.Data.Repo
             _db.Cities.Remove(city);
         }
 
+        public async Task<City> FindCity(int id)
+        {
+            return await _db.Cities.FindAsync(id);
+        }
+
         public async Task<IEnumerable<City>> GetCitiesAsync()
         {
             return await _db.Cities.ToListAsync();
         }
 
-        public async Task<bool> SaveAsync()
-        {
-            return await _db.SaveChangesAsync() > 0;
-        }
+        
     }
 }
