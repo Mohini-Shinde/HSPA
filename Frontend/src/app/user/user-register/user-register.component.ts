@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { User } from 'src/app/models/user';
+import { UserForRegister } from 'src/app/models/user';
 import { AlertifyService } from 'src/app/services/alertify.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { UserServiceService } from 'src/app/services/user-service.service';
 
 
@@ -12,9 +13,11 @@ import { UserServiceService } from 'src/app/services/user-service.service';
 })
 export class UserRegisterComponent implements OnInit {
  registrationForm : FormGroup;
- user:User ;
+ user:UserForRegister ;
  userSubmitted:boolean=false;
-  constructor(private fb:FormBuilder, private userService:UserServiceService,
+  constructor(private fb:FormBuilder,
+    private authService: AuthService,
+    private userService:UserServiceService,
     private alertify:AlertifyService
   ) { }
 
@@ -38,13 +41,13 @@ export class UserRegisterComponent implements OnInit {
     },{Validators:this.passwordMatchingValidator});
   }
   /* passwordMatchingValidator(fg:FormGroup)  {
-    return fg.get('password')?.value === fg.get('confirmPassword')?.value ? null : 
+    return fg.get('password')?.value === fg.get('confirmPassword')?.value ? null :
     {notMatched:true};
   } */
     passwordMatchingValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
       const password = control.get('password');
       const confirmPassword = control.get('confirmPassword');
-    
+
       return password?.value === confirmPassword?.value ? null : { notmatched: true };
     };
 //Getter methods for all form controls
@@ -67,24 +70,28 @@ export class UserRegisterComponent implements OnInit {
     console.log(this.registrationForm.value);
     this.userSubmitted=true;
     if(this.registrationForm.valid){
-      //this.user=Object.assign(this.user, this.registrationForm.value);   // Use Domain Models(user model) to map form data to model not user object directly like here did 
-      this.userService.addUser(this.userData());
+      //this.user=Object.assign(this.user, this.registrationForm.value);   // Use Domain Models(user model) to map form data to model not user object directly like here did
+      this.authService.registerUser(this.userData()).subscribe(()=>
+        {
+          this.onReset();
+          this.alertify.success('User registered successfully');
+        }
+      );
+
+    }
+  }
+  onReset(){
       this.registrationForm.reset();
       this.userSubmitted=false;
-      this.alertify.success('User registered successfully');
-    } 
-    else{
-      this.alertify.error('Kindly provide the required fields');
-    }  
   }
-  userData(): User {         
-    return this.user={ 
+  userData(): UserForRegister {
+    return this.user={
       userName:this.userName.value,
       password: this.password.value,
       email:this.email.value,
-      mobile:this.mobile.value,    
-      
+      mobile:this.mobile.value,
+
     };
   }
-  
+
 }

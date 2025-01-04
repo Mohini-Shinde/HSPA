@@ -36,8 +36,8 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 // Add repo
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-var secretKey = builder.Configuration.GetSection("AppSettings:Key").Value;
- var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!));
+var secretKey = builder.Configuration.GetSection("AppSettings:JwtKey").Value;
+ var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
     {
@@ -62,6 +62,8 @@ var app = builder.Build();
 //app.UseMiddleware<ExceptionMiddleware>();  // added this line to above extention method
 
 app.UseRouting();
+app.UseHsts();
+app.UseHttpsRedirection();
 app.UseCors(m => m.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 app.UseStaticFiles();
 app.UseAuthentication();

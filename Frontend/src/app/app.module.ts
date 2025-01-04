@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http'
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'
 import { BrowserModule } from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
 
@@ -16,7 +16,7 @@ import { UserRegisterComponent } from './user/user-register/user-register.compon
 import { UserServiceService } from './services/user-service.service';
 import { AlertifyService } from './services/alertify.service';
 import { AuthService } from './services/auth.service';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
@@ -25,10 +25,11 @@ import { PropertyDetailResolverService } from './property/property-detail/proper
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { FilterPipe } from './pipes/filter.pipe';
 import { SortPipe } from './pipes/sort.pipe';
+import { HttpErrorInterceptorService } from './services/httperror-interceptor.service';
 
 
 @NgModule({
-  declarations: [	
+  declarations: [
     AppComponent,
     PropertyCardComponent,
     PropertyListComponent,
@@ -53,7 +54,13 @@ import { SortPipe } from './pipes/sort.pipe';
     BsDatepickerModule.forRoot(),
     NgxGalleryModule
   ],
-  providers: [HousingService,UserServiceService,AlertifyService,AuthService, PropertyDetailResolverService],
+  providers: [
+    {
+      provide:HTTP_INTERCEPTORS,
+      useClass:HttpErrorInterceptorService,
+      multi:true
+    },
+    HousingService,UserServiceService,AlertifyService,AuthService, PropertyDetailResolverService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

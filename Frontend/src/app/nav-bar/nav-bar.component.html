@@ -11,10 +11,10 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLinkActive="active" routerLink="/rent-property">Rent</a>
-        </li>    
+        </li>
         <li class="nav-item">
           <a class="nav-link" routerLinkActive="active" routerLink="/add-property">List Property (Free)</a>
-        </li>  
+        </li>
       </ul>
       <div>
         <ul class="nav navbar-nav">
@@ -29,7 +29,7 @@
           </li> -->
           <div *ngIf="loggedIn()" class="dropdown mr-5" dropdown>
             <a href="#" class="dropdown-toggle text-light" dropdownToggle (click)="false">
-                Welcome 
+                Welcome {{loggedInUser}}
             </a>
             <div class="dropdown-menu" *dropdownMenu>
                 <a href="#"class="dropdown-item">
@@ -43,7 +43,7 @@
             </div>
           </div>
         </ul>
-      </div>      
+      </div>
     </div>
   </div>
 </nav>

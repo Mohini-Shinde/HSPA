@@ -7,16 +7,19 @@ import { AlertifyService } from '../services/alertify.service';
   styleUrls: ['./nav-bar.component.css']
 })
 export class NavBarComponent implements OnInit {
-
+  loggedInUser:  string;
   constructor(private alertify:AlertifyService) { }
 
   ngOnInit() {
   }
   loggedIn(){
-    return localStorage.getItem('token');
+    this.loggedInUser = localStorage.getItem('userName')!;
+    return this.loggedInUser;
+
   }
   onLogout(){
     localStorage.removeItem('token');
+    localStorage.removeItem('userName');
     this.alertify.success('Logged out successfully.')
   }
 }

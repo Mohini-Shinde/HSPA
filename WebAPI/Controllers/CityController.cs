@@ -19,8 +19,8 @@ namespace WebAPI.Controllers
             this._uow = uow;
             this._mapper = mapper;
         }
-
-        [HttpGet]
+        [AllowAnonymous]
+        [HttpGet("cities")]
         public async Task<IActionResult> Get()
         {
             var cities = await _uow.CityRepository.GetCitiesAsync();
@@ -33,7 +33,7 @@ namespace WebAPI.Controllers
             //                Name=c.Name
             //              };
 
-            return Ok(cityDto);
+            return Ok(cityDto); 
         }
         //Post api/city/add?cname=Miami
         //Post api/city/add/Los Angeles
